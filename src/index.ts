@@ -6,6 +6,7 @@ import { faker } from "@faker-js/faker";
 const app = new Elysia()
   .use(swagger({
     path: '/docs',
+    exclude: [],
     documentation: {
       info: {
         title: "Elysia REST API",
