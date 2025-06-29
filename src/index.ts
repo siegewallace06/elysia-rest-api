@@ -39,17 +39,7 @@ const app = new Elysia()
     detail: {
       tags: ["Seeding"],
       summary: "Seed database with 100 fake users",
-      description: "Generate and insert 100 fake users into the database using Faker.js",
-      responses: {
-        200: {
-          description: "Successfully seeded users",
-          content: {
-            "text/plain": {
-              schema: { type: "string" }
-            }
-          }
-        }
-      }
+      description: "Generate and insert 100 fake users into the database using Faker.js"
     }
   })
   .post("/users", ({ body, db }) => {
@@ -76,43 +66,7 @@ const app = new Elysia()
       detail: {
         tags: ["Users"],
         summary: "Create a new user",
-        description: "Create a new user with the provided information",
-        requestBody: {
-          description: "User information",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  first_name: { type: "string", description: "User's first name" },
-                  last_name: { type: "string", description: "User's last name" },
-                  email: { type: "string", format: "email", description: "User's email address" },
-                  about: { type: "string", description: "Optional information about the user" }
-                },
-                required: ["first_name", "last_name", "email"]
-              }
-            }
-          }
-        },
-        responses: {
-          200: {
-            description: "User created successfully",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    user_id: { type: "integer" },
-                    first_name: { type: "string" },
-                    last_name: { type: "string" },
-                    email: { type: "string" },
-                    about: { type: "string", nullable: true }
-                  }
-                }
-              }
-            }
-          }
-        }
+        description: "Create a new user with the provided information"
       }
     })
   .get("/users/:id", ({ params, db }) => {
@@ -125,43 +79,12 @@ const app = new Elysia()
   },
     {
       params: t.Object({
-        id: t.Numeric()
+        id: t.Number()
       }),
       detail: {
         tags: ["Users"],
         summary: "Get user by ID",
-        description: "Retrieve a specific user by their unique ID",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            description: "User ID",
-            schema: { type: "integer" }
-          }
-        ],
-        responses: {
-          200: {
-            description: "User found",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    user_id: { type: "integer" },
-                    first_name: { type: "string" },
-                    last_name: { type: "string" },
-                    email: { type: "string" },
-                    about: { type: "string", nullable: true }
-                  }
-                }
-              }
-            }
-          },
-          404: {
-            description: "User not found"
-          }
-        }
+        description: "Retrieve a specific user by their unique ID"
       }
     })
   .get("/users",
@@ -174,43 +97,12 @@ const app = new Elysia()
     },
     {
       query: t.Object({
-        limit: t.Numeric()
+        limit: t.Number()
       }),
       detail: {
         tags: ["Users"],
         summary: "Get all users with limit",
-        description: "Retrieve a list of users with pagination support, ordered by first name descending",
-        parameters: [
-          {
-            name: "limit",
-            in: "query",
-            required: true,
-            description: "Maximum number of users to return",
-            schema: { type: "integer", minimum: 1 }
-          }
-        ],
-        responses: {
-          200: {
-            description: "List of users",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      user_id: { type: "integer" },
-                      first_name: { type: "string" },
-                      last_name: { type: "string" },
-                      email: { type: "string" },
-                      about: { type: "string", nullable: true }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+        description: "Retrieve a list of users with pagination support, ordered by first name descending"
       }
     })
   .listen(3000);
