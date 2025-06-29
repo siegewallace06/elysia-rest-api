@@ -6,6 +6,7 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/swagger": "^1.3.1",
     "@faker-js/faker": "^9.8.0",
     "bun-sqlite-migrations": "^1.0.2",
     "elysia": "latest"
