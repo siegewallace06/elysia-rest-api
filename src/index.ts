@@ -1,11 +1,9 @@
 import { Elysia, t } from "elysia";
 import { swagger } from '@elysiajs/swagger';
-import { createDB } from "./db"; // Assuming your db setup is in './db'
+import { createDB } from "./db";
 import { faker } from "@faker-js/faker";
 
 const app = new Elysia()
-  // 1. Register the Swagger plugin FIRST.
-  // This allows it to scan all subsequent routes.
   .use(swagger({
     documentation: {
       info: {
@@ -13,7 +11,6 @@ const app = new Elysia()
         version: '1.0.0',
         description: 'A simple API for managing and seeding user data with ElysiaJS.'
       },
-      // Define tags to categorize your endpoints in the UI
       tags: [
         { name: 'App', description: 'General application endpoints' },
         { name: 'Users', description: 'Endpoints for user management' },
@@ -21,11 +18,7 @@ const app = new Elysia()
       ]
     }
   }))
-
-  // 2. Decorate the instance with your database
   .decorate('db', createDB())
-
-  // 3. Define all your routes with detailed documentation
   .get('/', () => 'Hello Elysia', {
     detail: {
       summary: 'API root endpoint',
@@ -91,6 +84,7 @@ const app = new Elysia()
   .post('/seed', ({ db }) => {
     const insertUser = db.prepare(
       "INSERT INTO users (first_name, last_name, email, about) VALUES ($first_name, $last_name, $email, $about) RETURNING *");
+    // Create 100 fake users for development/testing
     for (let i = 0; i < 100; i++) {
       insertUser.get({
         $first_name: faker.person.firstName(),
@@ -107,8 +101,6 @@ const app = new Elysia()
       tags: ['Seed']
     }
   })
-
-  // 4. Start the server
   .listen(3000);
 
 console.log(
