@@ -1,31 +1,10 @@
 import { Elysia, t } from "elysia";
-import { swagger } from "@elysiajs/swagger";
 import { createDB } from "./db";
 import { faker } from "@faker-js/faker";
 
 const app = new Elysia()
-  .use(swagger({
-    path: '/docs',
-    exclude: [],
-    documentation: {
-      info: {
-        title: "Elysia REST API",
-        version: "1.0.0",
-        description: "Simple REST API built with Elysia and SQLite",
-      },
-      tags: [
-        { name: "Users", description: "User management operations" },
-        { name: "Seeding", description: "Database seeding operations" },
-        { name: "App", description: "Root endpoint" }
-      ]
-    }
-  }))
   .decorate('db', createDB())
-  .get('/', () => 'Hello Elysia', {
-    detail: {
-      tags: ['App']
-    }
-  })
+  .get('/', () => 'Hello Elysia')
   .group('/users', app =>
     app
       .post('/', ({ body, db }) => {
@@ -44,12 +23,7 @@ const app = new Elysia()
           last_name: t.String(),
           email: t.String(),
           about: t.Optional(t.String())
-        }),
-        detail: {
-          tags: ['Users'],
-          summary: 'Create a new user',
-          description: 'Create a new user with the provided information'
-        }
+        })
       })
       .get('/:id', ({ params, db }) => {
         const userId = params.id
@@ -58,12 +32,7 @@ const app = new Elysia()
       }, {
         params: t.Object({
           id: t.Number()
-        }),
-        detail: {
-          tags: ['Users'],
-          summary: 'Get user by ID',
-          description: 'Retrieve a specific user by their unique ID'
-        }
+        })
       })
       .get('/', ({ query, db }) => {
         return db.query("SELECT * FROM users order by first_name desc limit $limit")
@@ -71,12 +40,7 @@ const app = new Elysia()
       }, {
         query: t.Object({
           limit: t.Number()
-        }),
-        detail: {
-          tags: ['Users'],
-          summary: 'Get all users with limit',
-          description: 'Retrieve a list of users with pagination support, ordered by first name descending'
-        }
+        })
       })
   )
   .post('/seed', ({ db }) => {
@@ -91,12 +55,6 @@ const app = new Elysia()
       })
     }
     return `Successfully seeded 100 users`
-  }, {
-    detail: {
-      tags: ['Seeding'],
-      summary: 'Seed database with 100 fake users',
-      description: 'Generate and insert 100 fake users into the database using Faker.js'
-    }
   })
   .listen(3000);
 
